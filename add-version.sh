@@ -43,7 +43,7 @@ function usage {
     info "Syntax: add-version.sh [OPTIONS]"
     cat << EOF
 Options are:
--v | --version {version}: For example 0.48.1. The version to download and process.
+-v | --version {version}: For example 0.48.0. The version to download and process.
 -h | --help : Display this help text.
 EOF
 }
