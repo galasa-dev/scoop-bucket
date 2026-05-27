@@ -33,10 +33,18 @@ scoop install galasactl
 
 ## Updating galasactl
 
-To update to the latest version:
+If you installed `galasactl` with the latest version:
 
 ```powershell
 scoop update galasactl
+```
+
+Otherwise, if you installed `galasactl` with a specific version, you'll have to uninstall and re-install:
+
+```powershell
+scoop uninstall galasactl
+scoop cache rm galasactl
+scoop install galasactl
 ```
 
 ## Uninstalling galasactl
