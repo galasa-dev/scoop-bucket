@@ -1,0 +1,94 @@
+#
+# Copyright contributors to the Galasa project
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+name: Release Scoop Bucket
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+env:
+  NAMESPACE: ${{ github.repository_owner }}
+
+jobs:
+  get-galasa-version:
+    name: Get Galasa Version
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 'galasa' repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.NAMESPACE }}/galasa
+          path: ${{ github.workspace }}/galasa
+          sparse-checkout: |
+            build.properties
+
+      - name: Get Galasa Version from build.properties file
+        id: get-galasa-version
+        run: |
+          cat ${{ github.workspace }}/galasa/build.properties | grep "=" >> $GITHUB_OUTPUT
+
+    outputs:
+      galasa-version: ${{ steps.get-galasa-version.outputs.GALASA_VERSION }}
+
+  update-scoop-bucket:
+    name: Update Scoop Bucket
+    runs-on: ubuntu-latest
+    needs: [get-galasa-version]
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    env:
+      GALASA_VERSION: ${{ needs.get-galasa-version.outputs.galasa-version }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Delete existing branch if it exists
+        run: |
+          git push origin --delete release/v${{ env.GALASA_VERSION }} || true
+
+      - name: Create branch for version update
+        run: |
+          git checkout -b release/v${{ env.GALASA_VERSION }}
+
+      - name: Run add-version.sh script
+        run: |
+          bash add-version.sh --version ${{ env.GALASA_VERSION }}
+
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "Add Galasa version ${{ env.GALASA_VERSION }}"
+
+      - name: Push changes
+        run: |
+          git push origin release/v${{ env.GALASA_VERSION }}
+
+      - name: Create Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --repo ${{ github.repository }} \
+            --title "Release Galasa v${{ env.GALASA_VERSION }}" \
+            --body "Automated release of Galasa version ${{ env.GALASA_VERSION }}
+
+          This PR updates the Scoop bucket with the new Galasa version:
+          - Creates versioned manifest: galasactl@${{ env.GALASA_VERSION }}.json
+          - Updates latest manifest: galasactl.json" \
+            --base main \
+            --head release/v${{ env.GALASA_VERSION }}
