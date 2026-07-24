@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "description": "Galasa CLI tool for managing and running Galasa tests. Latest version",
+  "description": "Galasa CLI tool for managing and running Galasa tests. Version 1.0.0",
   "homepage": "https://galasa.dev",
   "license": "EPL-2.0",
   "architecture": {
