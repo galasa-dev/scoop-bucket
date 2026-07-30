@@ -11,6 +11,9 @@ on:
 
 env:
   NAMESPACE: ${{ github.repository_owner }}
+  # Set TERM to xterm-256color to fix errors in set-version scripts that use tput.
+  # GitHub Actions doesn't set TERM by default, causing tput commands to fail.
+  TERM: xterm-256color
 
 jobs:
   get-galasa-version:
