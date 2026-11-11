@@ -1,12 +1,12 @@
 {
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Galasa CLI tool for managing and running Galasa tests. Latest version",
   "homepage": "https://galasa.dev",
   "license": "EPL-2.0",
   "architecture": {
     "64bit": {
-      "url": "https://github.com/galasa-dev/galasa/releases/download/v1.2.0/galasactl-windows-x86_64.exe",
-      "hash": "f094c15b49602bd9d41a06f65c206367242bb0cdc23795352971156ced44484c",
+      "url": "https://github.com/galasa-dev/galasa/releases/download/v1.3.0/galasactl-windows-x86_64.exe",
+      "hash": "2b89ebbae44c71c5a554686d220cd3e3b5fea9d7b9f36b877ff1fc68be05e87a",
       "bin": [
         [
           "galasactl-windows-x86_64.exe",
